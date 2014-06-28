@@ -1,0 +1,24 @@
+function mailgun(subject, message)
+{
+  local from    = "imp@no-reply.com";
+  local to      = "EMAIL@DOMAIN.COM"
+  local apikey  = "key-YOUR_MAILGUN_KEYHERE";
+  local domain  = "YOUR_SANDBOX_HERE.mailgun.org";
+  local request = http.post("https://api:" + apikey + "@api.mailgun.net/v2/" + domain 
+                         + "/messages", {"Content-Type": "application/x-www-form-urlencoded"}, "from=" + from + "&to=" 
+                         + to + "&subject=" + subject + "&text=" + message);
+
+  local response = request.sendsync();
+  server.log("Mailgun response: " + response.body);
+
+}
+
+function sendMail(message)
+{
+   local subject = "Electric Imp";
+   mailgun(subject, message);
+}
+
+mailgun("Electric Imp", "Motion Detected! :)");
+device.on("motionDetected", sendMail);
+
